@@ -1,11 +1,13 @@
 import pandas as pd
 import numpy as np
+
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
     recall_score,
     f1_score
 )
+
 
 # Load Drivers 1-5
 drivers = {}
@@ -95,11 +97,13 @@ print("OVERALL RESULTS")
 print("--------------------------------")
 
 print(
-    f"Accuracy: {results_df['accuracy'].mean():.4f} "
-    f"+/- {results_df['accuracy'].std():.4f}"
+    f"Accuracy: "
+    f"{results_df['accuracy'].mean():.4f} ± "
+    f"{results_df['accuracy'].std(ddof=1):.4f}"
 )
 
 print(
-    f"Macro F1: {results_df['f1'].mean():.4f} "
-    f"+/- {results_df['f1'].std():.4f}"
+    f"Macro F1: "
+    f"{results_df['f1'].mean():.4f} ± "
+    f"{results_df['f1'].std(ddof=1):.4f}"
 )
