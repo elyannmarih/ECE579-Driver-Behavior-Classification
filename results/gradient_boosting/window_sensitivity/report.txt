@@ -1,0 +1,91 @@
+Gradient Boosting window-size sensitivity (D1-D5)
+Primary metric: macro-F1, unweighted mean across the five held-out drivers.
+Variability: sample standard deviation (ddof=1) across those drivers.
+D6 was not read, windowed, or evaluated.
+
+Preprocessing
+  Nine channels from RAW_ACCELEROMETERS.txt, in file order:
+  raw X, Y, Z acceleration (g); Kalman-filtered X, Y, Z (g); roll, pitch, yaw (degrees).
+  Y is lateral and Z is longitudinal (Romera et al., ITSC 2016).
+  Non-overlapping windows inside each session. Incomplete tails are dropped.
+  2 s = 20 samples, 5 s = 50 samples, 7 s = 70 samples, from the verified ~10 Hz recordings.
+  NORMAL1 and NORMAL2 session names are labeled NORMAL.
+  Rebuilt 5-second windows matching the processed CSVs: 5316 / 5316, max absolute sensor difference 0.0.
+  The rebuilt 5-second model matches the saved reference fold metrics.
+
+Software: Python 3.13.2, scikit-learn 1.8.0, NumPy 2.2.4, pandas 3.0.2
+Hardware: 13th Gen Intel(R) Core(TM) i7-13700H (20 logical CPUs)
+random_state=42, max_depth=3
+Search: n_estimators=[100, 200, 300], learning_rate=[0.05, 0.1]
+Training time: wall 83.7 min, CPU 80.9 min
+
+Window counts and class balance
+  2s: 13308 windows | NORMAL 5689 (42.7%), DROWSY 4094 (30.8%), AGGRESSIVE 3525 (26.5%)
+  5s: 5316 windows | NORMAL 2272 (42.7%), DROWSY 1636 (30.8%), AGGRESSIVE 1408 (26.5%)
+  7s: 3791 windows | NORMAL 1620 (42.7%), DROWSY 1167 (30.8%), AGGRESSIVE 1004 (26.5%)
+
+Held-out driver results
+  2 seconds
+    D1: n_estimators=100, lr=0.05, accuracy=0.4234, macro-F1=0.3926, F1 NORMAL/DROWSY/AGGRESSIVE=0.5075/0.4018/0.2684
+    D2: n_estimators=300, lr=0.10, accuracy=0.5631, macro-F1=0.5511, F1 NORMAL/DROWSY/AGGRESSIVE=0.6002/0.5431/0.5100
+    D3: n_estimators=300, lr=0.10, accuracy=0.4740, macro-F1=0.4393, F1 NORMAL/DROWSY/AGGRESSIVE=0.5740/0.4239/0.3201
+    D4: n_estimators=300, lr=0.10, accuracy=0.4851, macro-F1=0.4539, F1 NORMAL/DROWSY/AGGRESSIVE=0.6147/0.3851/0.3618
+    D5: n_estimators=100, lr=0.05, accuracy=0.4768, macro-F1=0.4042, F1 NORMAL/DROWSY/AGGRESSIVE=0.6848/0.1561/0.3715
+    Mean accuracy 0.4845 +/- 0.0502; mean macro-F1 0.4482 +/- 0.0627
+  5 seconds
+    D1: n_estimators=100, lr=0.05, accuracy=0.4352, macro-F1=0.4018, F1 NORMAL/DROWSY/AGGRESSIVE=0.5304/0.3971/0.2778
+    D2: n_estimators=300, lr=0.05, accuracy=0.6391, macro-F1=0.6324, F1 NORMAL/DROWSY/AGGRESSIVE=0.6667/0.5699/0.6607
+    D3: n_estimators=200, lr=0.05, accuracy=0.5381, macro-F1=0.5093, F1 NORMAL/DROWSY/AGGRESSIVE=0.6238/0.4745/0.4296
+    D4: n_estimators=300, lr=0.10, accuracy=0.5404, macro-F1=0.5107, F1 NORMAL/DROWSY/AGGRESSIVE=0.6584/0.4000/0.4735
+    D5: n_estimators=200, lr=0.10, accuracy=0.4991, macro-F1=0.4555, F1 NORMAL/DROWSY/AGGRESSIVE=0.6681/0.2669/0.4314
+    Mean accuracy 0.5304 +/- 0.0742; mean macro-F1 0.5019 +/- 0.0857
+  7 seconds
+    D1: n_estimators=100, lr=0.05, accuracy=0.4462, macro-F1=0.4179, F1 NORMAL/DROWSY/AGGRESSIVE=0.5023/0.4615/0.2899
+    D2: n_estimators=200, lr=0.05, accuracy=0.6588, macro-F1=0.6488, F1 NORMAL/DROWSY/AGGRESSIVE=0.6930/0.5882/0.6650
+    D3: n_estimators=200, lr=0.05, accuracy=0.5451, macro-F1=0.5195, F1 NORMAL/DROWSY/AGGRESSIVE=0.6257/0.4819/0.4510
+    D4: n_estimators=300, lr=0.05, accuracy=0.5714, macro-F1=0.5389, F1 NORMAL/DROWSY/AGGRESSIVE=0.6806/0.3949/0.5411
+    D5: n_estimators=100, lr=0.05, accuracy=0.4854, macro-F1=0.4222, F1 NORMAL/DROWSY/AGGRESSIVE=0.6963/0.2096/0.3607
+    Mean accuracy 0.5414 +/- 0.0820; mean macro-F1 0.5095 +/- 0.0953
+
+Paired macro-F1 differences (same held-out driver)
+  2s minus 5s: mean -0.0537, sample std 0.0275, drivers improved 0 of 5
+    D1: -0.0092
+    D2: -0.0813
+    D3: -0.0700
+    D4: -0.0568
+    D5: -0.0513
+  7s minus 5s: mean +0.0075, sample std 0.0237, drivers improved 4 of 5
+    D1: +0.0162
+    D2: +0.0163
+    D3: +0.0102
+    D4: +0.0282
+    D5: -0.0333
+
+Highest mean macro-F1: 7 seconds (0.5095 +/- 0.0953).
+5-second mean macro-F1 remains 0.5019 +/- 0.0857.
+Driver-to-driver spread is larger than the gaps between window lengths, so a higher mean alone is not treated as a stable improvement.
+
+DROWSY F1 by held-out driver
+  2s: D1 0.402, D2 0.543, D3 0.424, D4 0.385, D5 0.156; mean 0.382 +/- 0.141
+  5s: D1 0.397, D2 0.570, D3 0.475, D4 0.400, D5 0.267; mean 0.422 +/- 0.112
+  7s: D1 0.462, D2 0.588, D3 0.482, D4 0.395, D5 0.210; mean 0.427 +/- 0.140
+
+Pooled confusion matrices (rows actual, columns predicted NORMAL, DROWSY, AGGRESSIVE)
+  2s
+                       Predicted NORMAL  Predicted DROWSY  Predicted AGGRESSIVE
+    Actual NORMAL                  3812               998                   879
+    Actual DROWSY                  1716              1431                   947
+    Actual AGGRESSIVE              1542               764                  1219
+  5s
+                       Predicted NORMAL  Predicted DROWSY  Predicted AGGRESSIVE
+    Actual NORMAL                  1578               374                   320
+    Actual DROWSY                   649               620                   367
+    Actual AGGRESSIVE               506               270                   632
+  7s
+                       Predicted NORMAL  Predicted DROWSY  Predicted AGGRESSIVE
+    Actual NORMAL                  1162               274                   184
+    Actual DROWSY                   468               455                   244
+    Actual AGGRESSIVE               364               196                   444
+
+The pooled matrix counts windows, so drivers with more windows contribute more cells.
+The headline means give each held-out driver equal weight.

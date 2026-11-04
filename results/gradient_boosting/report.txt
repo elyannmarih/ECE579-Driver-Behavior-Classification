@@ -1,0 +1,24 @@
+Gradient Boosting — Leave-One-Driver-Out (D1-D5)
+Features: per-channel mean, std, min, max, peak_abs from traindata50
+n_features=45, max_depth=3, random_state=42
+Runtime: 23 min
+D6 was not used.
+
+Per held-out driver:
+  D1: n_estimators=100, lr=0.05, accuracy=0.4352, macro_f1=0.4018, inner_macro_f1=0.4806
+  D2: n_estimators=300, lr=0.05, accuracy=0.6391, macro_f1=0.6324, inner_macro_f1=0.4353
+  D3: n_estimators=200, lr=0.05, accuracy=0.5381, macro_f1=0.5093, inner_macro_f1=0.4983
+  D4: n_estimators=300, lr=0.10, accuracy=0.5404, macro_f1=0.5107, inner_macro_f1=0.4689
+  D5: n_estimators=200, lr=0.10, accuracy=0.4991, macro_f1=0.4555, inner_macro_f1=0.5069
+
+Mean +/- sample standard deviation (ddof=1) across drivers:
+Accuracy:        0.5304 +/- 0.0742
+Macro Precision: 0.5265 +/- 0.0914
+Macro Recall:    0.5079 +/- 0.0791
+Macro-F1:        0.5019 +/- 0.0857
+
+Confusion matrix rows=actual, cols=predicted (NORMAL, DROWSY, AGGRESSIVE):
+                   Predicted NORMAL  Predicted DROWSY  Predicted AGGRESSIVE
+Actual NORMAL                  1578               374                   320
+Actual DROWSY                   649               620                   367
+Actual AGGRESSIVE               506               270                   632
