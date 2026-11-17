@@ -1,0 +1,41 @@
+Random Forest Classifier Leave One Driver Out 
+Features: mean, std, min, max, peak_abs
+
+Best Parameters:
+class_weight: balanced
+max_depth: 12
+max_features: sqrt
+min_samples_leaf: 4
+min_samples_leaf: 5
+n_estimators: 479
+
+Best Mean LODO macro-f1: 0.5226
+
+Accuracy Results
+Accuracy:   0.5407 +/- 0.0966
+Precision:  0.5401 +/- 0.1005
+recall:     0.5323 +/- 0.1003
+macro-f1:   0.5226 +/- 0.1011
+
+Results for each driver
+  test_driver  accuracy  precision  recall  macro-f1
+0          D1    0.4145     0.4043  0.4092    0.4010
+1          D2    0.6588     0.6556  0.6610    0.6549
+2          D3    0.5152     0.5229  0.4871    0.4878
+3          D4    0.6134     0.6205  0.6056    0.5943
+4          D5    0.5019     0.4972  0.4988    0.4751
+
+Confusion Matrix
+                 pred_NORMAL  pred_AGGRESSIVE  pred_DROWSY
+true_NORMAL             1414              423          435
+true_AGGRESSIVE          395              769          244
+true_DROWSY              546              381          709
+
+label   NORMAL  AGGRESSIVE  DROWSY   All
+driver                                  
+D1         426         251     288   965
+D2         451         296     317  1064
+D3         452         302     335  1089
+D4         482         316     340  1138
+D5         461         243     356  1060
+All       2272        1408    1636  5316
