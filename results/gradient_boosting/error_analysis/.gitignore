@@ -1,0 +1,6 @@
+# Local evidence containing source timestamps; do not redistribute.
+/d5_predictions.csv
+/selected_examples.local.json
+
+# Runtime failures may contain absolute local paths.
+/verification_failure.json
